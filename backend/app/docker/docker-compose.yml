@@ -1,0 +1,36 @@
+version: '3'
+services:
+  mongo:
+    container_name: mongo-server
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - '/data/configdb:/data/configdb'
+      - '/data/db:/data/db'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    command: [--auth]
+
+  mongo-express:
+    container_name: mongo_express
+    image: mongo-express
+    restart: always
+    # to start mongo-express after mongo
+    depends_on:
+      - mongo
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      ME_CONFIG_OPTIONS_EDITORTHEME: ambiance
+      #ME_CONFIG_MONGODB_SERVER: mongodb-server is used to tell the mongo-express
+      #service that the mongo service name(default mongo) is changed to mongodb-server.
+      # ME_CONFIG_MONGODB_SERVER: mongodb-server
+      #ME_CONFIG_BASICAUTH_USERNAME: admin and ME_CONFIG_BASICAUTH_PASSWORD: admin is used to tell
+      #mongo-express service to use the username admin and the password admin for authentication.
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
